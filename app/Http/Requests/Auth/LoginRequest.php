@@ -11,12 +11,34 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
+    private ?string $guard = null;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
         return true;
+    }
+
+    /**
+     * Set Guard
+     */
+    public function setGuard(string $guard) : self {
+        $this->guard = $guard;
+
+        return $this;
+    }
+
+    /**
+     * Get Guard
+     */
+    public function getGuard() : string {
+       if ($this->guard === null) {
+        $this->guard = config('auth.defaults.guard', 'web');
+       }
+    
+       return $this->guard;
     }
 
     /**
@@ -41,7 +63,8 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $guard = $this->getGuard();
+        if (! Auth::guard($guard)->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

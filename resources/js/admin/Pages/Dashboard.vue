@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import { Head, Link } from "@inertiajs/vue3";
 import OneColumnLayout from "@/admin/Layouts/OneColumn.vue";
 // import TwoColumnsLayout from "@/admin/Layouts/TwoColumns.vue";
 // import ThreeColumnsLayout from "@/admin/Layouts/ThreeColumns.vue";
@@ -24,7 +23,6 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Admin" />
     <OneColumnLayout title="Home">
         <template #left-sidebar> Left Side Bar </template>
         <template #right-sidebar> Right Side Bar </template>

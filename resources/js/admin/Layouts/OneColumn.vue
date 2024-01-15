@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/admin/Layouts/Auth.vue";
+import FullWidthLayout from "@/admin/Layouts/FullWidth.vue";
 defineProps({
     title: {
         type: String,
@@ -9,7 +9,7 @@ defineProps({
 </script>
 
 <template>
-    <AuthenticatedLayout :title="title">
+    <FullWidthLayout :title="title">
         <v-container>
             <v-row>
                 <v-col cols="12"><slot name="left-sidebar"></slot></v-col>
@@ -17,5 +17,5 @@ defineProps({
                 <v-col cols="12"><slot name="right-sidebar"></slot></v-col>
             </v-row>
         </v-container>
-    </AuthenticatedLayout>
+    </FullWidthLayout>
 </template>

@@ -1,27 +1,9 @@
-<script setup>
-import { ref } from "vue";
-const drawer = ref(null);
-defineProps({
-    title: {
-        type: String,
-        required: true,
-    },
-});
-</script>
-
 <template>
-    <v-app theme="dark">
-        <v-app-bar>
-            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-app-bar-title>{{ title }}</v-app-bar-title>
-        </v-app-bar>
-
-        <v-navigation-drawer v-model="drawer">
-            <v-list>
+    <v-list>
                 <v-list-item
                     prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-                    title="Sandra Adams"
-                    subtitle="sandra_a88@gmailcom"
+                    :title="$page.props.auth.user.name"
+                    :subtitle="$page.props.auth.user.email"
                 />
             </v-list>
 
@@ -120,15 +102,4 @@ defineProps({
                     ></v-list-item>
                 </v-list-group>
             </v-list>
-
-            <template v-slot:append>
-                <div class="pa-2">
-                    <v-btn block rounded prepend-icon="mdi-logout" color="purple-accent-4"> Logout </v-btn>
-                </div>
-            </template>
-        </v-navigation-drawer>
-        <v-main>
-            <slot />
-        </v-main>
-    </v-app>
 </template>
