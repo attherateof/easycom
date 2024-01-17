@@ -14,7 +14,7 @@ class ViewController extends Controller
      */
     public function __invoke()
     {
-        return Inertia::render('Admin/User/Login/View', [
+        return Inertia::render('User/Login/View', [
             'canResetPassword' => Route::has('admin.user.password.request'),
             'status' => session('status'),
         ]);

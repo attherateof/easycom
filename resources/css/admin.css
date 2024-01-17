@@ -1,3 +1,7 @@
 input {
     background-color: transparent;
 }
+.v-toolbar-title {
+    max-width: fit-content;
+    margin-right: 1rem;
+}

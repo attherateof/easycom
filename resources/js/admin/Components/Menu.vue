@@ -1,3 +1,7 @@
+<script setup>
+import { Link } from "@inertiajs/vue3";
+</script>
+
 <template>
     <v-list>
         <v-list-item
@@ -11,6 +15,7 @@
 
     <v-list density="compact" nav>
         <v-list-item
+            @click="$inertia.get(route('admin.home'))"
             prepend-icon="mdi-home"
             title="Home"
             value="home"
@@ -43,10 +48,12 @@
             <v-list-item title="Products" value="products"></v-list-item>
         </v-list-group>
         <v-list-item
-            prepend-icon="mdi-account-multiple"
-            title="Customers"
-            value="customers"
-        ></v-list-item>
+                @click="$inertia.get(route('admin.customer.list'))"
+                prepend-icon="mdi-account-multiple"
+                title="Customers"
+                value="customers"
+            ></v-list-item>
+
         <v-list-item
             prepend-icon="mdi-arrow-u-down-left"
             title="Return Management"

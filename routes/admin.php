@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\User\Login\ViewController as LoginViewController;
 use App\Http\Controllers\Admin\User\Login\AuthenticateController as AdminAuthenticateController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\User\LogoutController as AdminLogoutController;
+use App\Http\Controllers\Admin\Customer\ListController as CustomerListController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -19,6 +21,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminDashboardController::class, '__invoke'])->name('home');
         Route::prefix('user')->name('user.')->group(function () {
             Route::post('logout', [AdminLogoutController::class, '__invoke'])->name('logout');
+        });
+        Route::prefix('customer')->name('customer.')->group(function () {
+            Route::get('list', [CustomerListController::class, '__invoke'])->name('list');
         });
     });
 });
