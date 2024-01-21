@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { Head } from "@inertiajs/vue3";
 import NavigationMenu from "@/admin/Components/Menu.vue";
 import Logout from "@/admin/Components/User/Logout.vue";
+import Notification from "@/admin/Components/Notification.vue";
 const drawer = ref(null);
 defineProps({
     title: {
@@ -27,7 +28,9 @@ defineProps({
             </template>
         </v-navigation-drawer>
         <v-main>
+            <Notification/>
             <slot />
         </v-main>
+        
     </v-app>
 </template>

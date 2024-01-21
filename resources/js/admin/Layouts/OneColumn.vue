@@ -10,10 +10,10 @@ defineProps({
 
 <template>
     <FullWidthLayout :title="title">
-        <v-container>
+        <v-container fluid>
             <v-row>
-                <v-col cols="12"><slot name="left-sidebar"></slot></v-col>
                 <v-col cols="12"><slot /></v-col>
+                <v-col cols="12"><slot name="left-sidebar"></slot></v-col>
                 <v-col cols="12"><slot name="right-sidebar"></slot></v-col>
             </v-row>
         </v-container>

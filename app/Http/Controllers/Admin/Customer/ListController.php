@@ -17,7 +17,7 @@ class ListController extends Controller
     {
         $itemsPerPage = ($request->items_per_page) ?: 10;
         $dataOnly = $request->header('Data-Only', false);
-        $users = User::paginate($itemsPerPage);
+        $users = User::orderBy('id','desc')->paginate($itemsPerPage);
         $headers = [
             [
                 "title" => "ID",
