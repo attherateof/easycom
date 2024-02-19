@@ -4,70 +4,47 @@ import { usePage } from "@inertiajs/vue3";
 import { useApi } from "@/admin/Composable/Api.js";
 import { useUrl } from "@/admin/Composable/Url.js";
 import Confirmation from "@/admin/Components/Confirmation.vue";
+
 const { fetchData, deleteData } = useApi();
 const { getParams, updateUrl } = useUrl();
 const pageData = usePage();
 const selected = ref([]);
-const isDirty = ref(false);
 const loading = ref(false);
 const confirmDelete = ref(false);
 const item = ref(null);
 
 const render = (customers) => {
-    pageData.props.customers.total = customers.total;
-    pageData.props.customers.data = customers.data;
-};
-
-const prepareRequest = (page, itemsPerPage) => {
-    let params = {};
-    if (page) {
-        params.page = page;
-    }
-
-    if (itemsPerPage) {
-        params.items_per_page = itemsPerPage;
-    }
-
-    return params;
+    pageData.props.customers = customers;
 };
 
 const loadItems = async ({ page, itemsPerPage }) => {
-    if (isDirty.value) {
-        loading.value = true;
-        let params = prepareRequest(page, itemsPerPage);
-        let data = await fetchData(route("admin.customer.list"), params);
-        render(data.customers);
-        updateUrl(params);
-        loading.value = false;
-    }
-    isDirty.value = true;
+    if (loading.value) return;
+    loading.value = true;
+    const params = { page, items_per_page: itemsPerPage };
+    const data = await fetchData(route("admin.customer.list"), params);
+    render(data.customers);
+    updateUrl(params);
+    loading.value = false;
+};
+
+const deleteItem = async (rowItem) => {
+    item.value = rowItem;
+    confirmDelete.value = true;
 };
 
 const canDelete = async (success) => {
     confirmDelete.value = false;
-    if (success) {
-        if (item.value) {
-            loading.value = true;
-            let deleted = await deleteData(route("admin.customer.delete"), [
-                item.value.id,
-            ]);
-            if (deleted) {
-                let params = getParams();
-                let data = await fetchData(
-                    route("admin.customer.list"),
-                    params
-                );
-                render(data.customers);
-            }
-            item.value = null;
-            loading.value = false;
+    if (success && item.value) {
+        loading.value = true;
+        const deleted = await deleteData(route("admin.customer.delete"), [item.value.id]);
+        if (deleted) {
+            const params = getParams();
+            const data = await fetchData(route("admin.customer.list"), params);
+            render(data.customers);
         }
+        item.value = null;
+        loading.value = false;
     }
-};
-
-const deleteItem = (rowItem) => {
-    item.value = rowItem;
-    confirmDelete.value = true;
 };
 </script>
 <template>
@@ -111,7 +88,7 @@ const deleteItem = (rowItem) => {
         </template>
 
         <template v-slot:item.actions="{ item }">
-            <v-icon size="small" class="me-2"> mdi-pencil </v-icon>
+            <v-icon size="small" class="me-2" @click="$inertia.get(route('admin.customer.edit', item.id))"> mdi-pencil </v-icon>
             <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
     </v-data-table-server>

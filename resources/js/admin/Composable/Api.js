@@ -1,52 +1,43 @@
 import axios from "axios";
 
 export function useApi() {
-    const fetchData = async (route, params) => {
-        let data = null;
-        await axios
-            .get(route, {
-                headers: {
-                    "Data-Only": true,
-                },
-                params: params,
-            })
-            .then((res) => {
-                data = res.data;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+  const fetchData = async (route, params = {}) => {
+    try {
+      const response = await axios.get(route, {
+        headers: {
+          "Data-Only": true,
+        },
+        params: params,
+      });
 
-        return data;
-    };
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
-    const deleteData = async (route, ids, fake = false, status = true) => {
-        let deleted = false;
-        if (!fake) {
-            await axios
-                .delete(route, {
-                    headers: {
-                        "Data-Only": true,
-                    },
-                    params: {
-                        ids: ids,
-                    },
-                })
-                .then((res) => {
-                    let data = res.data;
-                    if (data.hasOwnProperty("success")) {
-                        deleted = true;
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        } else {
-            deleted = status;
-        }
+  const deleteData = async (route, ids, fake = false, status = true) => {
+    if (fake) {
+      return status;
+    }
 
-        return deleted;
-    };
+    try {
+      const response = await axios.delete(route, {
+        headers: {
+          "Data-Only": true,
+        },
+        params: {
+          ids: ids,
+        },
+      });
 
-    return { fetchData, deleteData };
+      return response.data.hasOwnProperty("success");
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  return { fetchData, deleteData };
 }

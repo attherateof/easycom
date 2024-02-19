@@ -5,21 +5,36 @@ import { useDate } from "vuetify";
 import FormContainer from "@/admin/Components/Form/Container.vue";
 import Loader from "@/admin/Components/Loader.vue";
 
+const props = defineProps({
+    customer: {
+        type: Object,
+        default: {},
+        required: false
+    },
+    id: {
+        type: Number,
+        default: null,
+        required: false
+    }
+});
+
 const date = useDate();
+
 const form = useForm({
-    is_active: true,
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    dob: date.date(),
+    is_active: props.customer.is_active || true,
+    first_name: props.customer.first_name || "",
+    middle_name: props.customer.middle_name || "",
+    last_name: props.customer.last_name || "",
+    email: props.customer.email || "",
+    phone: props.customer.phone || "",
+    dob: date.date(props.customer.dob) || date.date(),
 });
 
 const submit = () => {
     form.transform((data) => ({
         ...data,
         dob: date.toISO(data.dob),
+        id: props.id
     })).post(route("admin.customer.save"), {
         onFinish: () => form.reset(),
     });

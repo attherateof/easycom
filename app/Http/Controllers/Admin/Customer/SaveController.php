@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\Hash;
 class SaveController extends Controller
 {
 
+    /**
+     * Class SaveController
+     * 
+     * This controller is responsible for saving customer data.
+     */
     public function __construct(private readonly User $user)
     {
-
     }
 
     /**
@@ -22,7 +26,7 @@ class SaveController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $this->user::create([
+            $userData = [
                 "first_name" => $request->first_name,
                 "last_name" => $request->last_name,
                 "middle_name" => $request->middle_name,
@@ -30,13 +34,19 @@ class SaveController extends Controller
                 "phone" => $request->phone,
                 "dob" => $request->dob,
                 "password" => Hash::make($request->email),
-            ]);
+            ];
+
+            if (!$request->id) {
+                $user = $this->user::create($userData);
+            } else {
+                $user = $this->user::findOrFail($request->id);
+                $user->update($userData);
+            }
         } catch (\Throwable $th) {
-            
-            return Redirect::back()->with('error', 'Customer already exists.');
+            // log here
+            return Redirect::back()->with('error', 'Can not save the customer.');
         }
 
-
-        return Redirect::back()->with('success', 'Customer created.');
+        return redirect()->route('admin.customer.edit', ['id' => $user->id])->with('success', 'Customer created successfully');
     }
 }

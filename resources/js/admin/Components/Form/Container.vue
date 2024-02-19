@@ -2,7 +2,8 @@
 defineProps({
     backRoute: {
         type: String,
-        required: true,
+        required: false,
+        default: "",
     },
     title: {
         type: String,
@@ -16,14 +17,16 @@ defineProps({
         <v-card class="mb-4">
             <template v-slot:title> {{ title }} </template>
             <template v-slot:append>
-                <v-btn
-                    color="purple-accent-4"
-                    variant="text"
-                    prepend-icon="mdi-keyboard-backspace"
-                    @click="$inertia.get(route(backRoute))"
-                >
-                    Back
-                </v-btn>
+                <template v-if="backRoute !== ''">
+                    <v-btn
+                        color="purple-accent-4"
+                        variant="text"
+                        prepend-icon="mdi-keyboard-backspace"
+                        @click="$inertia.get(route(backRoute))"
+                    >
+                        Back
+                    </v-btn>
+                </template>
             </template>
             <v-card-text class="scrollable">
                 <slot />

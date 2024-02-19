@@ -31,10 +31,8 @@ class DeleteController extends Controller
             $type = "error";
             $message = $th->getMessage();
         }
-        if ($dataOnly) {
-            return response()->json([ $type => $message ]);
-        } else {
-            return Redirect::back()->with($type, $message);
-        }
+        $response = $dataOnly ? response()->json([$type => $message]) : Redirect::back()->with($type, $message);
+        
+        return $response;
     }
 }

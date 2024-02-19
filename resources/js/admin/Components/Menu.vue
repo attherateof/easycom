@@ -40,7 +40,7 @@
                 ></v-list-item>
             </template>
 
-            <v-list-item title="Categories" value="categories"></v-list-item>
+            <v-list-item @click="$inertia.get(route('admin.catalog.category.create'))" title="Categories" value="categories"></v-list-item>
             <v-list-item title="Products" value="products"></v-list-item>
         </v-list-group>
         <v-list-item
