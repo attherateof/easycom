@@ -2,16 +2,16 @@
     <draggable
         class="tree"
         tag="ul"
-        :list="children"
+        :list="props.children"
         :group="{ name: 'g1' }"
         item-key="name"
     >
         <template #item="{ element }">
             <li>
                 <span v-ripple>
-                    {{ element.name }}
+                    {{ element.title }}
                 </span>
-                <NestedTree :children="element.children" :depth="depth + 1" />
+                <NestedTree :children="element.children"/>
             </li>
         </template>
     </draggable>
@@ -19,7 +19,13 @@
 
 <script setup>
 import draggable from "vuedraggable";
-const props = defineProps(["children", "depth"]);
+const props = defineProps({
+    children: {
+        type: Array,
+        default: [],
+        required: false
+    }
+});
 </script>
 
 <style scoped>

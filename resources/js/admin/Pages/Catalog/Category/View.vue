@@ -7,7 +7,7 @@ import CategoryForm from "@/admin/Components/Catalog/Category/Form.vue";
 <template>
     <TwoColumnsLayout title="Add New Customer">
         <template v-slot:left-sidebar>
-            <CategoryTree/>
+            <CategoryTree :categories="$page.props.categories"/>
         </template>
         <CategoryForm/>
     </TwoColumnsLayout>

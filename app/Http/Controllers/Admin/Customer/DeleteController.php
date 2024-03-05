@@ -3,25 +3,27 @@
 namespace App\Http\Controllers\Admin\Customer;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 
 class DeleteController extends Controller
 {
-
+    /**
+     * @param User $user
+     */
     public function __construct(private readonly User $user)
     {
-
     }
 
     /**
-     * Handle the incoming request.
+     * @param Request $request
+     * @return JsonResponse|RedirectResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse|RedirectResponse
     {
-        $type = "";
-        $message = "";
         $dataOnly = $request->header('Data-Only', false);
         try {
             $this->user::destroy($request->ids);
@@ -31,8 +33,7 @@ class DeleteController extends Controller
             $type = "error";
             $message = $th->getMessage();
         }
-        $response = $dataOnly ? response()->json([$type => $message]) : Redirect::back()->with($type, $message);
-        
-        return $response;
+
+        return $dataOnly ? response()->json([$type => $message]) : Redirect::back()->with($type, $message);
     }
 }

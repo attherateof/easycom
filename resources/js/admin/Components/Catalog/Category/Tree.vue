@@ -1,41 +1,33 @@
 <template>
     <v-card
         title="Categories"
-        subtitle="List of all categories"
         class="tree-container"
     >
-        <div style="padding: 10px;">
-            <NestedDraggable :children="list" :depth="0"/>
-        </div>
+        <v-card-text class="scrollable">
+            <template v-if="tree.length">
+                <NestedDraggable :children="tree" :depth="0"/>
+            </template>
+        </v-card-text>
     </v-card>
+
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {ref, onMounted } from "vue";
 import NestedDraggable from "@/admin/Components/NestedTree.vue";
+import {useTree} from "@/admin/Composable/Tree.js";
 
-const list = ref([
-    {
-        name: "task 1",
-        children: [
-            {
-                name: "task 2",
-                children: [],
-            },
-        ],
-    },
-    {
-        name: "task 3",
-        children: [
-            {
-                name: "task 4",
-                children: [],
-            },
-        ],
-    },
-    {
-        name: "task 5",
-        children: [],
-    },
-]);
+const props = defineProps({
+    categories: {
+        type: Object,
+        default: [],
+        required: false
+    }
+});
+const {generateTree} = useTree();
+const tree = ref([]);
+
+onMounted(() => {
+    tree.value = generateTree(props.categories)
+})
 </script>

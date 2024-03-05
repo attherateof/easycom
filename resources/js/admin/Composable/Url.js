@@ -24,7 +24,7 @@ export function useUrl() {
         }
         return obj;
     };
-    
 
-    return { getParams, updateUrl };
+
+    return {getParams, updateUrl};
 }

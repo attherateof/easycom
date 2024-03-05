@@ -1,21 +1,83 @@
 <script setup>
+import {ref} from "vue";
+import {useForm} from "@inertiajs/vue3";
 import FormContainer from "@/admin/Components/Form/Container.vue";
+import imageInput from "@/admin/Components/Form/Upload/Image/Single.vue";
+import Loader from "@/admin/Components/Loader.vue";
+import { useSlug } from "@/admin/Composable/Slug.js";
+const { generate } = useSlug();
+
+const props = defineProps({
+    category: {
+        type: Object,
+        default: {},
+        required: false
+    },
+    id: {
+        type: Number,
+        default: null,
+        required: false
+    }
+});
+
+const items = ref([
+    {
+        "title": "Products Only",
+        "value": 0
+    },
+    {
+        "title": "Static Content Only",
+        "value": 1
+    },
+    {
+        "title": "Both Products and Static Contents",
+        "value": 2
+    }
+]);
+
+const form = useForm({
+    status: props.category.status || true,
+    title: props.category.title || "",
+    description: props.category.description || "",
+    banner: props.category.banner || "",
+    anchor: props.category.anchor || true,
+    display_type: props.category.display_type || 0,
+    slug: props.category.slug || "",
+    meta_title: props.category.meta_title || "",
+    meta_description: props.category.meta_description || "",
+    meta_image: props.category.meta_image || ""
+});
+
+const submit = () => {
+    form.transform((data) => ({
+        ...data,
+        id: props.id,
+        slug: generate(data)
+    })).post(route("admin.catalog.category.save"), {
+        onFinish: () => form.reset(),
+    });
+};
 </script>
+
 <template>
-    <FormContainer title="Add new Customer">
-        <p>General</p>
-        <v-divider class="mt-2"></v-divider>
-        <v-switch label="Is Active?" color="purple-accent-4"></v-switch>
+    <FormContainer title="Add new Customer" @submit.prevent="submit">
+        <v-switch
+            v-model="form.status"
+            label="Is Active?"
+            color="purple-accent-4"
+        ></v-switch>
         <v-text-field
+            v-model="form.title"
             color="purple-accent-4"
             label="Title"
-            placeholder="Customer's first name"
+            placeholder="Category title"
             variant="outlined"
             density="comfortable"
             clearable
             required
         />
         <v-textarea
+            v-model="form.description"
             color="purple-accent-4"
             label="Description"
             auto-grow
@@ -24,70 +86,40 @@ import FormContainer from "@/admin/Components/Form/Container.vue";
             row-height="25"
             shaped
         ></v-textarea>
-
-        <v-file-input
-            color="deep-purple-accent-4"
-            density="comfortable"
-            counter
-            label="File input"
-            multiple
-            placeholder="Select your files"
-            prepend-icon="mdi-paperclip"
-            variant="outlined"
-            :show-size="1000"
-        >
-            <template v-slot:selection="{ fileNames }">
-                <template
-                    v-for="(fileName, index) in fileNames"
-                    :key="fileName"
-                >
-                    <v-chip
-                        v-if="index < 2"
-                        color="deep-purple-accent-4"
-                        label
-                        size="small"
-                        class="me-2"
-                    >
-                        {{ fileName }}
-                    </v-chip>
-                </template>
-            </template>
-        </v-file-input>
-
-        <p class="mt-8">Display Settings</p>
-        <v-divider class="mt-2"></v-divider>
+        <imageInput v-model="form.banner" label="Category Banner"/>
         <v-switch
+            v-model="form.anchor"
             label="Can show child category's products?"
             color="purple-accent-4"
         ></v-switch>
         <v-select
+            v-model="form.display_type"
             :items="items"
             density="comfortable"
             label="Display Type"
             variant="outlined"
+            color="purple-accent-4"
         ></v-select>
-        
-        <p class="mt-8">SEO</p>
-        <v-divider class="mt-2"></v-divider>
         <v-text-field
+            v-model="form.slug"
             color="purple-accent-4"
             label="Slug"
             placeholder="Customer's first name"
             variant="outlined"
             density="comfortable"
             clearable
-            required
         />
         <v-text-field
+            v-model="form.meta_title"
             color="purple-accent-4"
             label="Meta Title"
             placeholder="Customer's first name"
             variant="outlined"
             density="comfortable"
             clearable
-            required
         />
         <v-textarea
+            v-model="form.meta_description"
             color="purple-accent-4"
             label="Meta Description"
             auto-grow
@@ -97,51 +129,12 @@ import FormContainer from "@/admin/Components/Form/Container.vue";
             shaped
         ></v-textarea>
 
-        <v-file-input
-            color="deep-purple-accent-4"
-            density="comfortable"
-            counter
-            label="File input"
-            multiple
-            placeholder="Select your files"
-            prepend-icon="mdi-paperclip"
-            variant="outlined"
-            :show-size="1000"
-        >
-            <template v-slot:selection="{ fileNames }">
-                <template
-                    v-for="(fileName, index) in fileNames"
-                    :key="fileName"
-                >
-                    <v-chip
-                        v-if="index < 2"
-                        color="deep-purple-accent-4"
-                        label
-                        size="small"
-                        class="me-2"
-                    >
-                        {{ fileName }}
-                    </v-chip>
-                </template>
-            </template>
-        </v-file-input>
-
+        <imageInput  v-model="form.meta_image" label="Category meta banner"/>
         <template v-slot:action>
             <v-btn color="purple-accent-4" variant="flat" type="submit">
                 Submit
             </v-btn>
         </template>
     </FormContainer>
+    <Loader :show="form.processing"/>
 </template>
-
-<script>
-export default {
-    data: () => ({
-        items: [
-            "Products Only",
-            "Sattic Content Only",
-            "Both Products and Static Contents",
-        ],
-    }),
-};
-</script>

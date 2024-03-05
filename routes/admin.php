@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Customer\SaveController as CustomerSaveController
 use App\Http\Controllers\Admin\Customer\DeleteController as CustomerDeleteController;
 // Category
 use App\Http\Controllers\Admin\Catalog\Category\CreateController as CatalogCategoryCreateController;
+use App\Http\Controllers\Admin\Catalog\Category\SaveController as CatalogCategorySaveController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -38,6 +39,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('catalog')->name('catalog.')->group(function () {
             Route::prefix('category')->name('category.')->group(function () {
                 Route::get('create', [CatalogCategoryCreateController::class, '__invoke'])->name('create');
+                Route::post('save', [CatalogCategorySaveController::class, '__invoke'])->name('save');
             });
         });
     });
