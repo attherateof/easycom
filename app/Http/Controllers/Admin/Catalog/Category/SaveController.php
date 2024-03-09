@@ -55,7 +55,7 @@ class SaveController extends Controller
         }
 
         return redirect()
-            ->route('admin.catalog.category.create', ['id' => $category->id])
+            ->route('admin.catalog.category.edit', ['id' => $category->id])
             ->with('success', 'Category created successfully');
     }
 }

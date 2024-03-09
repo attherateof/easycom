@@ -4,8 +4,11 @@ import {useForm} from "@inertiajs/vue3";
 import FormContainer from "@/admin/Components/Form/Container.vue";
 import imageInput from "@/admin/Components/Form/Upload/Image/Single.vue";
 import Loader from "@/admin/Components/Loader.vue";
-import { useSlug } from "@/admin/Composable/Slug.js";
-const { generate } = useSlug();
+import {useSlug} from "@/admin/Composable/Slug.js";
+import {useImageValidation} from "@/admin/Composable/Validation/ImageValidation.js";
+
+const {generate} = useSlug();
+const {isBase64} = useImageValidation();
 
 const props = defineProps({
     category: {
@@ -52,7 +55,9 @@ const submit = () => {
     form.transform((data) => ({
         ...data,
         id: props.id,
-        slug: generate(data)
+        slug: generate(data),
+        banner: isBase64(data.banner) ? data.banner : null,
+        meta_image: isBase64(data.meta_image) ? data.meta_image : null,
     })).post(route("admin.catalog.category.save"), {
         onFinish: () => form.reset(),
     });
@@ -129,7 +134,7 @@ const submit = () => {
             shaped
         ></v-textarea>
 
-        <imageInput  v-model="form.meta_image" label="Category meta banner"/>
+        <imageInput v-model="form.meta_image" label="Category meta banner"/>
         <template v-slot:action>
             <v-btn color="purple-accent-4" variant="flat" type="submit">
                 Submit

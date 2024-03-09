@@ -13,7 +13,7 @@
             @change="handleFileChange"
         />
         <img v-if="preview" :src="preview" alt="Preview" style="max-width: 100%;" />
-        <p>Drag and drop or click to upload an image</p>
+        <p  v-else>Drag and drop or click to upload an image</p>
     </div>
 </template>
 

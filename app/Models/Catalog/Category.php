@@ -2,6 +2,7 @@
 
 namespace App\Models\Catalog;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -40,12 +41,38 @@ class Category extends Model
         'sort_order'
     ];
 
+    /**
+     * Determine if the user is an administrator.
+     *
+     * @param $value
+     * @return string|null
+     */
+    protected function getBannerAttribute($value): ?string
+    {
+        return ($value) ? asset($value) : null;
+    }
+
+    /**
+     * Determine if the user is an administrator.
+     *
+     * @param $value
+     * @return string|null
+     */
+    protected function getMetaImageAttribute($value): ?string
+    {
+        return ($value) ? asset($value) : null;
+    }
 
     /**
      * The products that belong to the category.
      */
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class,'category_products', 'category_id', 'product_id');
+        return $this->belongsToMany(
+            Product::class,
+            'category_products',
+            'category_id',
+            'product_id'
+        );
     }
 }

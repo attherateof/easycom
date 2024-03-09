@@ -7,7 +7,7 @@
         item-key="name"
     >
         <template #item="{ element }">
-            <li>
+            <li @click="$inertia.get(route('admin.catalog.category.edit', element.id))">
                 <span v-ripple>
                     {{ element.title }}
                 </span>
@@ -24,7 +24,8 @@ const props = defineProps({
         type: Array,
         default: [],
         required: false
-    }
+    },
+
 });
 </script>
 

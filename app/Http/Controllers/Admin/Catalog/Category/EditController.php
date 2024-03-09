@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin\Catalog\Category;
 
 use App\Http\Controllers\Controller;
-use Inertia\Inertia;
-use Illuminate\Http\Request;
-use Inertia\Response;
 use App\Models\Catalog\Category;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
-class CreateController extends Controller
+class EditController extends Controller
 {
     /**
      * Class SaveController
@@ -19,17 +19,19 @@ class CreateController extends Controller
     {
     }
 
-    public function __invoke(Request $request): Response
+    public function __invoke(int $id): Response
     {
         $Categories = $this->categoryModel::orderBy('sort_order', 'ASC')
             ->select('id', 'title', 'parent_id')
-            ->append('banner_url')
             ->get()
             ->toArray();
 
-        return Inertia::render('Catalog/Category/Create',
+        $Category = $this->categoryModel::findOrFail($id);
+
+        return Inertia::render('Catalog/Category/Edit',
             [
-                "categories" => $Categories
+                "categories" => $Categories,
+                "category" => $Category
             ]
         );
     }
