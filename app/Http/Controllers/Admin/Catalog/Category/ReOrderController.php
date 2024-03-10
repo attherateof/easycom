@@ -5,24 +5,22 @@ namespace App\Http\Controllers\Admin\Catalog\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Service\Catalog\CategoryService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
-class DeleteController extends Controller
+class ReOrderController extends Controller
 {
     public function __construct(
         private readonly CategoryService $categoryService
     ) {
     }
 
-    /**
-     * @param int $id
-     * @return RedirectResponse
-     */
-    public function __invoke(int $id): RedirectResponse
+
+    public function __invoke(Request $request): RedirectResponse
     {
-        $this->categoryService->delete($id);
+        $this->categoryService->reOrder($request['list']);
 
         return redirect()
             ->route('admin.catalog.category.create')
-            ->with('success', 'Category deleted successfully');
+            ->with('success', 'Category re-ordered successfully');
     }
 }

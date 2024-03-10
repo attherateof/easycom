@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\Catalog\Category\CreateController as CatalogCateg
 use App\Http\Controllers\Admin\Catalog\Category\EditController as CatalogCategoryEditController;
 use App\Http\Controllers\Admin\Catalog\Category\SaveController as CatalogCategorySaveController;
 use App\Http\Controllers\Admin\Catalog\Category\DeleteController as CatalogCategoryDeleteController;
+use App\Http\Controllers\Admin\Catalog\Category\ReOrderController as CatalogCategoryReOrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -44,6 +45,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('edit/{id}', [CatalogCategoryEditController::class, '__invoke'])->name('edit');
                 Route::post('save', [CatalogCategorySaveController::class, '__invoke'])->name('save');
                 Route::delete('delete/{id}', [CatalogCategoryDeleteController::class, '__invoke'])->name('delete');
+                Route::post('reorder', [CatalogCategoryReOrderController::class, '__invoke'])->name('reorder');
             });
         });
     });

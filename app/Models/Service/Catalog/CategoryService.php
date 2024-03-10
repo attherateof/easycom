@@ -34,6 +34,10 @@ class CategoryService
         return  $category;
     }
 
+    /**
+     * @param int $categoryId
+     * @return void
+     */
     public function delete(int $categoryId): void
     {
         $category =  ($categoryId) ? Category::findOrFail($categoryId) : null;
@@ -43,6 +47,24 @@ class CategoryService
         }
     }
 
+    public function reOrder(array $list): void
+    {
+        if ($list) {
+            foreach ($list as $key => $item) {
+                $category =  ($item['id']) ? Category::findOrFail($item['id']) : null;
+                if ($category) {
+                    $category->parent_id = $item['parent_id'];
+                    $category->sort_order = $key + 1;
+                    $category->save();
+                }
+            }
+        }
+    }
+
+    /**
+     * @param Category $category
+     * @return void
+     */
     private function deleteImages(Category $category): void
     {
         foreach (self::IMAGE_FIELDS as $imageField) {
@@ -52,6 +74,11 @@ class CategoryService
         }
     }
 
+    /**
+     * @param array $categoryData
+     * @param Category|null $category
+     * @return array
+     */
     private function handleImages(array $categoryData, ?Category $category): array
     {
         foreach (self::IMAGE_FIELDS as $imageField) {
@@ -68,6 +95,10 @@ class CategoryService
         return $categoryData;
     }
 
+    /**
+     * @param string $imageString
+     * @return string
+     */
     private function saveImage(string $imageString): string
     {
         return $this->imageService->setImageString($imageString)->save();
