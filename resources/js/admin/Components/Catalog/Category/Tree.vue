@@ -5,7 +5,7 @@
     >
         <v-card-text class="scrollable">
             <template v-if="tree.length">
-                <NestedDraggable :children="tree" :depth="0"/>
+                <NestedDraggable :children="tree" :depth="0" pageRoute="admin.catalog.category.edit"/>
             </template>
         </v-card-text>
     </v-card>

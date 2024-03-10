@@ -34,6 +34,7 @@ class Category extends Model
         'slug',
         'description',
         'banner',
+        'anchor',
         'meta_title',
         'meta_description',
         'meta_image',

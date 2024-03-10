@@ -5,6 +5,7 @@ namespace App\Models\Service;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Image
 {
@@ -35,6 +36,17 @@ class Image
         $this->storeImage($path, $imageData);
 
         return 'storage/' . $path;
+    }
+
+    public function delete(string $path): void
+    {
+        $substring = $this->getRelativePath($path);
+
+        if ($substring) {
+            $this->deleteFile($substring);
+        } else {
+            Log::error("Relative path not exists");
+        }
     }
 
     private function getImageString(): string
@@ -76,5 +88,23 @@ class Image
     private function getStoragePath(): string
     {
         return $this->storagePath ?: self::DEFAULT_STORAGE_PATH;
+    }
+
+    private function getRelativePath(string $path): ?string
+    {
+        $searchTerm = 'storage/';
+        $substring = strstr($path, $searchTerm);
+
+        if ($substring !== false) {
+            $offset = strlen($searchTerm);
+            return substr($substring, $offset);
+        } else {
+            return null;
+        }
+    }
+
+    private function deleteFile(string $path): void
+    {
+        Storage::disk('public')->delete($path);
     }
 }

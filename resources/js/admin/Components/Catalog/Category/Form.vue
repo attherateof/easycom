@@ -39,11 +39,11 @@ const items = ref([
 ]);
 
 const form = useForm({
-    status: props.category.status || true,
+    status: (props.category.hasOwnProperty('status') && props.category.status !== 0) || false,
     title: props.category.title || "",
     description: props.category.description || "",
     banner: props.category.banner || "",
-    anchor: props.category.anchor || true,
+    anchor: (props.category.hasOwnProperty('anchor') && props.category.anchor !== 0) || false,
     display_type: props.category.display_type || 0,
     slug: props.category.slug || "",
     meta_title: props.category.meta_title || "",

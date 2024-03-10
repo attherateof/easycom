@@ -23,7 +23,6 @@ class CreateController extends Controller
     {
         $Categories = $this->categoryModel::orderBy('sort_order', 'ASC')
             ->select('id', 'title', 'parent_id')
-            ->append('banner_url')
             ->get()
             ->toArray();
 

@@ -7,11 +7,11 @@
         item-key="name"
     >
         <template #item="{ element }">
-            <li @click="$inertia.get(route('admin.catalog.category.edit', element.id))">
+            <li @click="handleClick(element.id)">
                 <span v-ripple>
                     {{ element.title }}
                 </span>
-                <NestedTree :children="element.children"/>
+                <NestedTree :children="element.children" :pageRoute="props.pageRoute"/>
             </li>
         </template>
     </draggable>
@@ -19,14 +19,26 @@
 
 <script setup>
 import draggable from "vuedraggable";
+import { router } from '@inertiajs/vue3'
 const props = defineProps({
     children: {
         type: Array,
         default: [],
         required: false
     },
-
+    pageRoute: {
+        type: String,
+        default: null,
+        required: false
+    },
 });
+
+const handleClick = (id = null) => {
+    if (props.pageRoute && id) {
+        let path = route('admin.catalog.category.edit', id)
+        router.visit(path)
+    }
+};
 </script>
 
 <style scoped>
@@ -34,6 +46,7 @@ ul {
     margin-left: 20px;
     min-height: 20px;
 }
+
 ul li {
     list-style-type: none;
     margin: 10px 0 10px 10px;
