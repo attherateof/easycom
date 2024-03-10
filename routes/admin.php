@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\Customer\DeleteController as CustomerDeleteContro
 use App\Http\Controllers\Admin\Catalog\Category\CreateController as CatalogCategoryCreateController;
 use App\Http\Controllers\Admin\Catalog\Category\EditController as CatalogCategoryEditController;
 use App\Http\Controllers\Admin\Catalog\Category\SaveController as CatalogCategorySaveController;
+use App\Http\Controllers\Admin\Catalog\Category\DeleteController as CatalogCategoryDeleteController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -42,6 +43,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('create', [CatalogCategoryCreateController::class, '__invoke'])->name('create');
                 Route::get('edit/{id}', [CatalogCategoryEditController::class, '__invoke'])->name('edit');
                 Route::post('save', [CatalogCategorySaveController::class, '__invoke'])->name('save');
+                Route::delete('delete/{id}', [CatalogCategoryDeleteController::class, '__invoke'])->name('delete');
             });
         });
     });

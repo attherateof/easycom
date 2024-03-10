@@ -27,6 +27,7 @@ defineProps({
                         Back
                     </v-btn>
                 </template>
+                <slot name="secondary-actions"></slot>
             </template>
             <v-card-text class="scrollable">
                 <slot />

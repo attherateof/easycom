@@ -4,6 +4,7 @@ import {useForm} from "@inertiajs/vue3";
 import FormContainer from "@/admin/Components/Form/Container.vue";
 import imageInput from "@/admin/Components/Form/Upload/Image/Single.vue";
 import Loader from "@/admin/Components/Loader.vue";
+import DeleteCategory from "@/admin/Components/Catalog/Category/Delete.vue";
 import {useSlug} from "@/admin/Composable/Slug.js";
 import {useImageValidation} from "@/admin/Composable/Validation/ImageValidation.js";
 
@@ -52,20 +53,28 @@ const form = useForm({
 });
 
 const submit = () => {
+    const submitUrl = route("admin.catalog.category.save");
     form.transform((data) => ({
         ...data,
         id: props.id,
         slug: generate(data),
         banner: isBase64(data.banner) ? data.banner : null,
         meta_image: isBase64(data.meta_image) ? data.meta_image : null,
-    })).post(route("admin.catalog.category.save"), {
+    })).post(submitUrl, {
         onFinish: () => form.reset(),
     });
 };
 </script>
 
 <template>
-    <FormContainer title="Add new Customer" @submit.prevent="submit">
+    <FormContainer :title="(props.id) ? 'Update Category' : 'Add new Category'" @submit.prevent="submit">
+        <template v-if="props.id" v-slot:secondary-actions>
+            <v-btn color="purple-accent-4 mr-4" variant="text" type="button" prepend-icon="mdi-plus"
+                   @click="$inertia.get(route('admin.catalog.category.create'))">
+                Create new
+            </v-btn>
+            <DeleteCategory :id="props.id"/>
+        </template>
         <v-switch
             v-model="form.status"
             label="Is Active?"

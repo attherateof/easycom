@@ -8,6 +8,8 @@ use Throwable;
 
 class CategoryService
 {
+    private const IMAGE_FIELDS = ['banner', 'meta_image'];
+
     /**
      * @param ImageService $imageService
      */
@@ -25,7 +27,6 @@ class CategoryService
     public function save(array $categoryData, ?int $categoryId = null): Category
     {
         $category =  ($categoryId) ? Category::findOrFail($categoryId) : new Category();
-//        dd($category->toArray());
         $categoryData = $this->handleImages($categoryData, $category);
         $category->fill($categoryData);
         $category->save();
@@ -33,9 +34,27 @@ class CategoryService
         return  $category;
     }
 
+    public function delete(int $categoryId): void
+    {
+        $category =  ($categoryId) ? Category::findOrFail($categoryId) : null;
+        if ($category) {
+            $this->deleteImages($category);
+            Category::destroy($categoryId);
+        }
+    }
+
+    private function deleteImages(Category $category): void
+    {
+        foreach (self::IMAGE_FIELDS as $imageField) {
+            if (isset($category->$imageField)) {
+                $this->imageService->delete($category->$imageField);
+            }
+        }
+    }
+
     private function handleImages(array $categoryData, ?Category $category): array
     {
-        foreach (['banner', 'meta_image'] as $imageField) {
+        foreach (self::IMAGE_FIELDS as $imageField) {
             if (isset($categoryData[$imageField])) {
                 if ($category && $category->$imageField) {
                     $this->imageService->delete($category->$imageField);
@@ -48,7 +67,6 @@ class CategoryService
 
         return $categoryData;
     }
-
 
     private function saveImage(string $imageString): string
     {
